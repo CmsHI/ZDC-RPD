@@ -1,0 +1,16 @@
+Integral of Channel_1 == 7.02
+Integral of Channel_2 == 6.9
+Integral of Channel_3 == 6.88
+Integral of Channel_4 == 7.42
+Integral of Channel_5 == 7.36
+Integral of Channel_6 == 5.92
+Integral of Channel_7 == 6.82
+Integral of Channel_8 == 6.92
+Integral of Channel_9 == 7.48
+Integral of Channel_10 == 6.64
+Integral of Channel_11 == 6.94
+Integral of Channel_12 == 7.38
+Integral of Channel_13 == 7.32
+Integral of Channel_14 == 6.18
+Integral of Channel_15 == 6.86
+Integral of Channel_16 == 7.1
