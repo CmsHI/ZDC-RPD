@@ -63,6 +63,6 @@ for fileName in fileNames:
         f = ROOT.TFile.Open(rootfileName)
         c = ROOT.TCanvas()
         #c.SetLogx()
-        #c.SetLogy()
+        c.SetLogy()
         histo1D.Draw("pl")
         c.SaveAs("ZDC_Cable_%s/Histograms/%s_Channel_%s.pdf"%(section,section,str(count)))
