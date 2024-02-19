@@ -17,9 +17,9 @@ fileNames_Plus_Cable_Noise_RPD = ["ZDC_Plus_CableNoiseCSVs/1522269-rpd1.csv", "Z
 "ZDC_Plus_CableNoiseCSVs/1522280-rpd12.csv","ZDC_Plus_CableNoiseCSVs/1522281-rpd13.csv","ZDC_Plus_CableNoiseCSVs/1522282-rpd14.csv","ZDC_Plus_CableNoiseCSVs/1522283-rpd15.csv",
 "ZDC_Plus_CableNoiseCSVs/1522284-rpd16.csv"]
 
-fileNames_Minus_Cable_Noise_EM = ["ZDC_Plus_CableNoiseCSVs/1522343-em1.csv","ZDC_Plus_CableNoiseCSVs/1522344-em2.csv","ZDC_Plus_CableNoiseCSVs/1522345-em3.csv","ZDC_Plus_CableNoiseCSVs/1522346-em4.csv"]
+fileNames_Plus_Cable_Noise_EM = ["ZDC_Plus_CableNoiseCSVs/1522343-em1.csv","ZDC_Plus_CableNoiseCSVs/1522344-em2.csv","ZDC_Plus_CableNoiseCSVs/1522345-em3.csv","ZDC_Plus_CableNoiseCSVs/1522346-em4.csv"]
 
-fileNames_Minus_Cable_Noise_HAD = ["ZDC_Plus_CableNoiseCSVs/1522348-had1.csv","ZDC_Plus_CableNoiseCSVs/1522266-had2.csv","ZDC_Plus_CableNoiseCSVs/1522267-had3.csv","ZDC_Plus_CableNoiseCSVs/1522268-had4.csv"]
+fileNames_Plus_Cable_Noise_HAD = ["ZDC_Plus_CableNoiseCSVs/1522348-had1.csv","ZDC_Plus_CableNoiseCSVs/1522266-had2.csv","ZDC_Plus_CableNoiseCSVs/1522267-had3.csv","ZDC_Plus_CableNoiseCSVs/1522268-had4.csv"]
 
 fileNames_Test = ["ZDC_Plus_CableNoiseCSVs/1522285-spare.csv"]
 
@@ -35,9 +35,9 @@ count = 0
 if section == "RPD":
         fileNames = fileNames_Plus_Cable_Noise_RPD
 elif section == "HAD":
-        fileNames = fileNames_Minus_Cable_Noise_HAD
+        fileNames = fileNames_Plus_Cable_Noise_HAD
 elif section == "EM":
-        fileNames = fileNames_Minus_Cable_Noise_EM
+        fileNames = fileNames_Plus_Cable_Noise_EM
 elif section == "Test":
         fileNames = fileNames_Test
 
