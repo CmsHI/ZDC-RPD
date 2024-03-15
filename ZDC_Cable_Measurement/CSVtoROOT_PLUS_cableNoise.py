@@ -29,7 +29,7 @@ fileNames_Minus_Cable_Noise_EM = ["ZDC_Plus_CableNoiseCSVs/1522343-em1.csv","ZDC
 
 fileNames_Minus_Cable_Noise_HAD = ["ZDC_Plus_CableNoiseCSVs/1522348-had1.csv","ZDC_Plus_CableNoiseCSVs/1522266-had2.csv","ZDC_Plus_CableNoiseCSVs/1522267-had3.csv","ZDC_Plus_CableNoiseCSVs/1522268-had4.csv"]
 
-fileNames_Test = ["ZDC_Plus_CableNoiseCSVs/1522285-spare.csv","ZDC_Plus_CableNoiseCSVs/1522283-rpd15.csv","ZDC_Plus_CableNoiseCSVs/1522284-rpd16.csv"]
+fileNames_Spare = ["ZDC_Plus_CableNoiseCSVs/1522285-spare.csv"]
 
 section = sys.argv[1]
 
@@ -45,8 +45,8 @@ elif section == "HAD":
     fileNames = fileNames_Minus_Cable_Noise_HAD
 elif section == "EM":
     fileNames = fileNames_Minus_Cable_Noise_EM
-elif section == "Test":
-    fileNames = fileNames_Test
+elif section == "Spare":
+    fileNames = fileNames_Spare
 else:
 	print("Invalid section provided! Please use RPD, HAD, EM or Test.")
 	sys.exit(1) 
@@ -82,16 +82,18 @@ for fileName in fileNames:
     print('Magnitude Output',magnitude_input)
 
     # Calculate the dispersion as the ratio of magnitudes
-    dispersion = magnitude_input / magnitude_output
+    dispersion = (magnitude_input / magnitude_output)*100
 
     plt.figure()
     plt.plot(np.arange(0, len(dispersion)), np.abs(dispersion))
     plt.title("Dispersion by FFT of Input/Output Signal for %s Channel_%s"%(section, str(count)))
     plt.xlabel("Frequency Bin")
-    plt.ylabel("Dispersion")
+    plt.ylabel("Dispersion (%)")
     plt.grid(True)
+    plt.axvline(x=30, color='r')
+    plt.axvline(x=70, color='r')
     plt.savefig("ZDC_Cable_%s/Histograms/%s_Channel_%s_FFT_Magnitude.pdf"%(section,section,str(count)))
-    plt.show()
+    #plt.show()
     plt.close()   
 	   
     df.Snapshot(treeName,rootfileName,"",snapshotOptions)
