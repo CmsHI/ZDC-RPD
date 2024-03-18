@@ -14,6 +14,7 @@ import sys
 import os
 import array
 import matplotlib.pyplot as plt
+from matplotlib import gridspec
 
 # Load the necessary ROOT libraries
 ROOT.gSystem.Load("libMathCore")
@@ -48,7 +49,7 @@ elif section == "EM":
 elif section == "Spare":
     fileNames = fileNames_Spare
 else:
-	print("Invalid section provided! Please use RPD, HAD, EM or Test.")
+	print("Invalid section provided! Please use RPD, HAD, EM or Spare.")
 	sys.exit(1) 
 
 for fileName in fileNames:
@@ -68,11 +69,16 @@ for fileName in fileNames:
     print(int(x_axis_Max))
     data = [histo1D.GetBinContent(i) for i in range(1, n_bins + 1)]
 
+    #Input square signal (from Bunker with Signal Generator)
+    sample_rate = 10
+    num_samples = 100
+    wave = np.fromfunction(lambda i: (3*sample_rate < i) & (i < 7*sample_rate), (num_samples,)).astype(np.float)
+
     # Input square signal
-    input_signal = signal.square(np.linspace(0, 2 * np.pi, len(data)))	
+    #input_signal = signal.square(np.linspace(0, 2 * np.pi, len(data)))	
 
     # Perform FFT
-    fft_input = np.fft.fft(input_signal)
+    fft_input = np.fft.fft(wave)
     fft_output = np.fft.fft(data)
 
     # Compute the magnitude spectrum of the FFT for both signals
@@ -82,26 +88,44 @@ for fileName in fileNames:
     print('Magnitude Output',magnitude_input)
 
     # Calculate the dispersion as the ratio of magnitudes
-    dispersion = (magnitude_input / magnitude_output)*100
+    dispersion = (magnitude_input / magnitude_output)
 
-    plt.figure()
-    plt.plot(np.arange(0, len(dispersion)), np.abs(dispersion))
-    plt.title("Dispersion by FFT of Input/Output Signal for %s Channel_%s"%(section, str(count)))
+    #Normalize the data
+    data = (data - np.min(data)) / (np.max(data) - np.min(data))
+
+    # Plot the Square Signal, Output Signal and Dispersion
+    fig = plt.figure(figsize=(10, 10))    
+    gs = gridspec.GridSpec(2, 1, height_ratios=[2, 0.8])
+    #Upper Plot
+    ax1 = plt.subplot(gs[0])
+    ax1.plot(wave, label='Square Signal', color='green')
+    ax1.plot(data, label='Output Signal', color='red')
+    ax1.set_ylabel('A.U')
+    ax1.set_title("Dispersion by FFT of Input/Output Signal for %s Channel_%s"%(section, str(count)))
+    ax1.legend()
+    ax1.grid(True)
+    ax1.set_ylim(0, 1.1)
+    plt.setp(ax1.get_xticklabels(), visible=False)  
+    
+    #Lower plot
+    ax2 = plt.subplot(gs[1])
+    ax2.plot(np.arange(0, len(dispersion)), np.abs(dispersion), label='Dispersion', color='blue')
+    ax2.set_xlabel("Frequency Bin")
+    ax2.set_ylabel("input/output")
+    ax2.legend()     
+    #Adjust plot view
+    plt.subplots_adjust(hspace=0.1)
     plt.xlabel("Frequency Bin")
-    plt.ylabel("Dispersion (%)")
     plt.grid(True)
-    plt.axvline(x=30, color='r')
-    plt.axvline(x=70, color='r')
+    plt.legend()
     plt.savefig("ZDC_Cable_%s/Histograms/%s_Channel_%s_FFT_Magnitude.pdf"%(section,section,str(count)))
-    #plt.show()
+    plt.show()
     plt.close()   
 	   
     df.Snapshot(treeName,rootfileName,"",snapshotOptions)
     f = ROOT.TFile.Open(rootfileName)
     c = ROOT.TCanvas()
-    #hp = histo1D.ROOT.FFT(hp, "MAG")
     #c.SetLogx()
     #c.SetLogy()
     histo1D.Draw("pl")
-    #hp.Draw("same")
     c.SaveAs("ZDC_Cable_%s/Histograms/%s_Channel_%s.pdf"%(section,section,str(count)))
