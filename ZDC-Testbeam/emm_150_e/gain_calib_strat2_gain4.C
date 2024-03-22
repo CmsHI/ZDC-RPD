@@ -1,0 +1,80 @@
+double calc_rel_width(const double* x){
+    ROOT::RDataFrame charge_df("main_tree",("EMM_150Gev_e_charge_pos_upd2emm.root"));
+
+    auto event_filter= [](int& peaks1,int& peaks2,int& peaks3,int& peaks4,int& peaks5){
+        if(1==0){
+            return true;
+        }
+        return ((peaks1<2)&&(peaks2<2)&&(peaks3<2)&&(peaks4<2)&&(peaks5<2));
+    };
+
+    double rel_gain4;
+    rel_gain4=x[0];
+    
+
+    auto calc_ch4=[&rel_gain4](double& charge4){
+        return (rel_gain4*charge4);
+    };
+
+    auto new_df=charge_df.Define("ch4_charge",calc_ch4,{"charge4"})
+                         .Filter(event_filter,{"num_peaks_ch4","num_peaks_ch2","num_peaks_ch3","num_peaks_ch4","num_peaks_ch5"});
+
+
+    auto ch4_hist=new_df.Histo1D({"ch4_charge","Channel 4",180,2500,7000},"ch4_charge");
+    auto ch3_hist=new_df.Histo1D({"ch3","Channel 3",180,2500,7000},"charge3");
+
+    double chi2;
+    chi2=ch3_hist->Chi2Test(&(*ch4_hist),"UU P CHI2");
+    return chi2;
+}
+
+
+void gain_calib_strat2_gain4(std::string filename="EMM_150Gev_e_charge_pos_upd2emm",int filter_num_of_peaks=1){
+    
+
+
+    //here begins the minimizer part
+    const char * minName = "Minuit2";
+    const char *algoName = "SIMPLEX";
+    int randomSeed = -1;
+
+    ROOT::Math::Minimizer* minimum =
+      ROOT::Math::Factory::CreateMinimizer(minName, algoName);
+    if (!minimum) {
+        std::cerr << "Error: cannot create minimizer \"" << minName
+                    << "\". Maybe the required library was not built?" << std::endl;
+        return;
+    }
+    // set tolerance , etc...
+    minimum->SetMaxFunctionCalls(1000000); // for Minuit/Minuit2
+    minimum->SetMaxIterations(10000);  // for GSL
+    minimum->SetTolerance(0.05);
+    minimum->SetPrintLevel(1);
+
+
+    
+
+    // create function wrapper for minimizer
+    // a IMultiGenFunction type
+    ROOT::Math::Functor f(&calc_rel_width,1);
+    double step[1] = {0.01};
+    // starting point
+
+    double variable[1] = { 1.28};
+    
+
+    minimum->SetFunction(f);
+
+    // Set the free variables to be minimized !
+    minimum->SetVariable(0,"rel_gain4",variable[0], step[0]);
+    
+    cout<<"starting minimization"<<endl;
+    // do the minimization
+    minimum->Minimize();
+
+    const double *xs = minimum->X();
+    std::cout << "Minimum: f(" << xs[0] << "): "
+                << minimum->MinValue()  << std::endl;
+
+    
+}
