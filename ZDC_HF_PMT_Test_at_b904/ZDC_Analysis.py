@@ -28,7 +28,7 @@ def get_name(eos_path):
     return ZDC_labels
 
 def gain(mean, width):
-    return (width * width * 10e-16) / (mean * electron_charge)
+    return (width * width * 10e-16) / (mean * electron_charge) # (10e*16) comes from the fC unit
 
 files_ZDC = glob.glob("/eos/user/u/utok/904_PMT_Tests/ZDC_PMTs/*_04_2024/*.root")
 files_HF = glob.glob("/eos/user/u/utok/904_PMT_Tests/HF_PMTs/*_2024/*.root")
@@ -111,7 +111,7 @@ for PMT_IDs in zdc_PMT_ID:
             else:
                 hist.Draw("HIST SAME")
             
-            # Calculate mean and width for the histogram
+            # Get the mean and width values for the Gain calculation
             mean = hist.GetMean()
             width = hist.GetRMS()
             gain_value = gain(mean, width)
