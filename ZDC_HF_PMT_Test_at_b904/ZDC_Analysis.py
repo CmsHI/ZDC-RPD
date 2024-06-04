@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 '''
-Author: U. Guney Tok, Sitian Qian
+Authors: U. Guney Tok, Sitian Qian
 
 Description: ZDC PMTs test at B904 and gain calculation | 2024.
 
@@ -130,16 +130,12 @@ for PMT_IDs in zdc_PMT_ID:
     # Set axis titles and ranges
     if hist_dict_led:
         first_hist = list(hist_dict_led.values())[0]
-        first_hist.GetXaxis().SetTitle("Charge (fC)")
-        first_hist.GetYaxis().SetTitle("Entries")
-        first_hist.SetTitle(f"Charge Distribution for {PMT_IDs}")
+        first_hist.SetTitle(f"Charge Distribution for {PMT_IDs};Charge (fC);Entries")
         first_hist.GetXaxis().SetRangeUser(0, 1400)
         first_hist.GetYaxis().SetRangeUser(0, 2200)
     
     if hist_ped_1100:
-        hist_ped_1100.GetXaxis().SetTitle("Charge (fC)")
-        hist_ped_1100.GetYaxis().SetTitle("Entries")
-        hist_ped_1100.SetTitle(f"Charge Distribution for {PMT_IDs}")
+        hist_ped_1100.SetTitle(f"Charge Distribution for {PMT_IDs};Charge (fC);Entries")
         hist_ped_1100.GetXaxis().SetRangeUser(0, 1400)
         hist_ped_1100.GetYaxis().SetRangeUser(0, 2200)
     
