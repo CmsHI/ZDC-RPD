@@ -200,6 +200,7 @@ with open(f'gain_values_{partition}.txt', 'w') as file:
         graph.Draw("APL")
         
         # Fit with distribution (Power law fit) 
+        # gain ~ C.HV^{k.n}  | where n is number of dynodes (8 for Hamamatsu R7525, tested PMTs)
         power_law = ROOT.TF1("power_law", "[0] * TMath::Power(x, 8*[1])", min(hv_values), max(hv_values))
         power_law.SetParameters(1, 1)  # Initial guess for the parameters
 
