@@ -28,6 +28,7 @@ def get_name(eos_path): # Root files were collected as, eg1: "ZDC_CA3767_PED_115
     }
     return ZDC_labels
 
+# Reference: Hamamatsu PMT Handbook ( https://www.hamamatsu.com/content/dam/hamamatsu-photonics/sites/documents/99_SALES_LIBRARY/etd/PMT_handbook_v4E.pdf )
 def gain(mean, width):
     return (width * width * 10e-16) / (mean * electron_charge) #10e-16 comes from femtoCoulomb (fC) unit
 
@@ -198,7 +199,7 @@ with open(f'gain_values_{partition}.txt', 'w') as file:
         #Draw the graph with points and lines
         graph.Draw("APL")
         
-        # Fit with distribution (Power law fit)
+        # Fit with distribution (Power law fit) 
         power_law = ROOT.TF1("power_law", "[0] * TMath::Power(x, 8*[1])", min(hv_values), max(hv_values))
         power_law.SetParameters(1, 1)  # Initial guess for the parameters
 
