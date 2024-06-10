@@ -18,7 +18,7 @@ partition = sys.argv[1] # "HF" or "ZDC"
 electron_charge = 1.602e-19
 ZDC_sections = {'CA3770':'ZDCP-EM1','CA3771':'ZDCP-EM2','CA3772':'ZDCP-EM3','CA3773':'ZDCP-EM4','CA3775':'ZDCP-EM5','CA3785':'ZDCP-HAD1','CA3765':'ZDCP-HAD2','CA3766':'ZDCP-HAD3','CA3767':'ZDCP-HAD4','CA3784':'ZDCM-EM1','CA3782':'ZDCM-EM2','CA3780':'ZDCM-EM3','CA3779':'ZDCM-EM4','CA3777':'ZDCM-EM5','CA3786':'ZDCM-HAD1','CA3787':'ZDCM-HAD2','CA3788':'ZDCM-HAD3','CA3789':'ZDCM-HAD4'}
 
-def get_name(eos_path):
+def get_name(eos_path): # Root files were collected as, eg1: "ZDC_CA3767_PED_1150V.root" or eg2: "HF_CA1776_PED_1250V.root"
     root_file_name = os.path.basename(eos_path)
     infos = root_file_name.split(".")[0].split("_")
     ZDC_labels = {
@@ -29,7 +29,7 @@ def get_name(eos_path):
     return ZDC_labels
 
 def gain(mean, width):
-    return (width * width * 10e-16) / (mean * electron_charge)
+    return (width * width * 10e-16) / (mean * electron_charge) #10e-16 comes from femtoCoulomb (fC) unit
 
 def fit_gaussian(histogram):
     fit = ROOT.TF1("fit","gaus")
@@ -202,7 +202,7 @@ with open(f'gain_values_{partition}.txt', 'w') as file:
         power_law = ROOT.TF1("power_law", "[0] * TMath::Power(x, 8*[1])", min(hv_values), max(hv_values))
         power_law.SetParameters(1, 1)  # Initial guess for the parameters
 
-        # Perform the fit multiple times to improve results
+        # Perform the fit multiple times to improve fit results
         for i in range(25):
             graph.Fit(power_law, "R")
 
